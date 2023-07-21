@@ -60,7 +60,7 @@ data "aws_iam_policy_document" "this" {
   }
 }
 
-resource "aws_sns_topic_policy" "default" {
+resource "aws_sns_topic_policy" "this" {
   count  = var.enabled && var.notifications_enabled && var.notifications_topic_arn == "" ? 1 : 0
   arn    = aws_sns_topic.this[0].arn
   policy = data.aws_iam_policy_document.this[0].json
