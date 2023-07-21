@@ -52,7 +52,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_codegurureviewer_repository_association"></a> [codegurureviewer\_repository\_association](#output\_codegurureviewer\_repository\_association) | n/a |
+| <a name="output_codegurureviewer_repository_association"></a> [codegurureviewer\_repository\_association](#output\_codegurureviewer\_repository\_association) | CodeGuru Reviewer repository association ID |
 | <a name="output_notifications_sns_arn"></a> [notifications\_sns\_arn](#output\_notifications\_sns\_arn) | ARN of SNS topic for notifications (if enabled) |
 | <a name="output_repository_arn"></a> [repository\_arn](#output\_repository\_arn) | CodeCommit repository ARN |
 | <a name="output_repository_clone_url_http"></a> [repository\_clone\_url\_http](#output\_repository\_clone\_url\_http) | CodeCommit repository HTTP clone url |

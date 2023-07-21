@@ -24,7 +24,8 @@ output "repository_default_branch" {
 }
 
 output "codegurureviewer_repository_association" {
-  value = aws_codegurureviewer_repository_association.this[*].id
+  value       = aws_codegurureviewer_repository_association.this[*].id
+  description = "CodeGuru Reviewer repository association ID"
 }
 
 output "notifications_sns_arn" {
