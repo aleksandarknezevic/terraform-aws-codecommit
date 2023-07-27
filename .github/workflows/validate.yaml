@@ -1,0 +1,56 @@
+name: Terraform pre-commit
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+
+env:
+  TERRAFORM_DOCS_VERSION: v0.16.0
+  TFLINT_VERSION: v0.47.0
+
+jobs:
+  directories:
+    runs-on: ubuntu-latest
+    outputs:
+      dirs: ${{ steps.set-dirs.outputs.dirs }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: set-dirs
+        run: echo "dirs=$(dirs=("./"); for d in $(ls -d examples/*); do dirs+=($d); done; echo "[\"${dirs[@]}\"]" | sed 's/ /", "/g')" >> $GITHUB_OUTPUT
+  terraform-min-version:
+    name: Terraform min version
+    needs: [directories]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory: ${{fromJson(needs.directories.outputs.dirs)}}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Terraform min/max versions
+        id: minMax
+        uses: clowdhaus/terraform-min-max@v1.2.4
+        with:
+          directory: ${{ matrix.directory }}
+
+      - name: Install Terraform v${{ matrix.version }}
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ steps.minMax.outputs.minVersion }}
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v3
+        with:
+          tflint_version: $TFLINT_VERSION
+
+      - name: Terraform validate min version
+        run: |
+          cd ${{ matrix.directory }}
+          terraform fmt -check
+          terraform init
+          terraform validate --color=always --show-diff-on-failure
+          tflint
+

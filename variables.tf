@@ -5,11 +5,6 @@ variable "enabled" {
   description = "Enable creation of module."
 }
 
-variable "region" {
-  type        = string
-  description = "AWS region"
-}
-
 variable "tags" {
   type        = map(string)
   default     = {}
