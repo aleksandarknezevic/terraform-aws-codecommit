@@ -44,7 +44,7 @@ jobs:
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v3
         with:
-          tflint_version: $TFLINT_VERSION
+          tflint_version: ${{TFLINT_VERSION}}
 
       - name: Terraform validate min version
         run: |
