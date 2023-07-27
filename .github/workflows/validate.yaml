@@ -36,7 +36,7 @@ jobs:
       maxVersion: ${{ steps.minMax.outputs.maxVersion }}
 
   terraform-validation-linting:
-    name: Terraform min version
+    name: Terraform min/max version validation
     needs: [directories, terraform-versions]
     runs-on: ubuntu-latest
     strategy:
@@ -60,7 +60,7 @@ jobs:
         with:
           tflint_version: ${{env.TFLINT_VERSION}}
 
-      - name: Terraform validate min version
+      - name: Terraform validate
         run: |
           cd ${{ matrix.directory }}
           terraform fmt -check
