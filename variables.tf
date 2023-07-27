@@ -77,13 +77,13 @@ variable "notifications_event_ids" {
   "codecommit-repository-pull-request-created", "codecommit-repository-pull-request-source-updated", "codecommit-repository-pull-request-status-changed"]
   description = <<EOF
     List of notifications events. Allowed values are:
-    codecommit-repository-comments-on-commits,
-    codecommit-repository-comments-on-pull-requests,
-    codecommit-repository-approvals-status-changed,
-    codecommit-repository-approvals-rule-override,
-    codecommit-repository-pull-request-created,
-    codecommit-repository-pull-request-source-updated,
-    codecommit-repository-pull-request-status-change.
+    - codecommit-repository-comments-on-commits
+    - codecommit-repository-comments-on-pull-requests
+    - codecommit-repository-approvals-status-changed
+    - codecommit-repository-approvals-rule-override
+    - codecommit-repository-pull-request-created
+    - codecommit-repository-pull-request-source-updated
+    - codecommit-repository-pull-request-status-change.
   EOF
 
   validation {
@@ -91,13 +91,13 @@ variable "notifications_event_ids" {
 
     error_message = <<EOF
       The "notifications_events" variable must contain unique elements and all elements must be one of the allowed values:
-      - codecommit-repository-comments-on-commits
-      - codecommit-repository-comments-on-pull-requests
-      - codecommit-repository-approvals-status-changed
-      - codecommit-repository-approvals-rule-override
-      - codecommit-repository-pull-request-created
-      - codecommit-repository-pull-request-source-updated
-      - codecommit-repository-pull-request-status-changed
+        codecommit-repository-comments-on-commits,
+        codecommit-repository-comments-on-pull-requests,
+        codecommit-repository-approvals-status-changed,
+        codecommit-repository-approvals-rule-override,
+        codecommit-repository-pull-request-created,
+        codecommit-repository-pull-request-source-updated,
+        codecommit-repository-pull-request-status-change.
     EOF
   }
 }
