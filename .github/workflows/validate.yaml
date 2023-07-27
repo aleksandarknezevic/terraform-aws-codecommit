@@ -19,27 +19,41 @@ jobs:
       - uses: actions/checkout@v3
       - id: set-dirs
         run: echo "dirs=$(dirs=("./"); for d in $(ls -d examples/*); do dirs+=($d); done; echo "[\"${dirs[@]}\"]" | sed 's/ /", "/g')" >> $GITHUB_OUTPUT
-  terraform-min-version:
-    name: Terraform min version
-    needs: [directories]
+  terraform-versions:
+    name: Select Terraform versions
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        directory: ${{fromJson(needs.directories.outputs.dirs)}}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Terraform min/max versions
+      - name: Extract Terraform min/max versions
         id: minMax
-        uses: clowdhaus/terraform-min-max@v1.2.4
+        uses: clowdhaus/terraform-min-max@1.2.7
         with:
-          directory: ${{ matrix.directory }}
+          directory: .
+    outputs:
+      minVersion: ${{ steps.minMax.outputs.minVersion }}
+      maxVersion: ${{ steps.minMax.outputs.maxVersion }}
+
+  terraform-validation-linting:
+    name: Terraform min version
+    needs: [directories, terraform-versions]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory: ${{fromJson(needs.directories.outputs.dirs)}}
+        tf_version:
+          - ${{ needs.terraform-versions.outputs.minVersion }}
+          - ${{ needs.terraform-versions.outputs.maxVersion }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Install Terraform v${{ matrix.version }}
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2.0.3
         with:
-          terraform_version: ${{ steps.minMax.outputs.minVersion }}
+          terraform_version: ${{ matrix.tf_version }}
 
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v3
@@ -53,39 +67,3 @@ jobs:
           terraform init
           terraform validate
           tflint
-
-  terraform-max-version:
-    name: Terraform max version
-    needs: [directories]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        directory: ${{fromJson(needs.directories.outputs.dirs)}}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Terraform min/max versions
-        id: minMax
-        uses: clowdhaus/terraform-min-max@v1.2.4
-        with:
-          directory: ${{ matrix.directory }}
-
-      - name: Install Terraform v${{ matrix.version }}
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: ${{ steps.minMax.outputs.maxVersion }}
-
-      - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v3
-        with:
-          tflint_version: ${{env.TFLINT_VERSION}}
-
-      - name: Terraform validate max version
-        run: |
-          cd ${{ matrix.directory }}
-          terraform fmt -check
-          terraform init
-          terraform validate
-          tflint
-
