@@ -51,6 +51,6 @@ jobs:
           cd ${{ matrix.directory }}
           terraform fmt -check
           terraform init
-          terraform validate --color=always --show-diff-on-failure
+          terraform validate
           tflint
 
