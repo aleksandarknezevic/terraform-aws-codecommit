@@ -5,8 +5,6 @@ resource "aws_kms_key" "this" {
 
 module "codecommit_repository" {
   source = "../../"
-
-  region                    = var.region
   repository_name           = var.repository_name
   repository_description    = var.repository_description
   repository_default_branch = var.repository_default_branch
