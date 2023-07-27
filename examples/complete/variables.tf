@@ -31,12 +31,6 @@ variable "enable_codeguru" {
   description = "Whether to enable CodeGuru reviewer"
 }
 
-variable "kms_id" {
-  type        = string
-  default     = ""
-  description = "ID for existing KMS for CodeGuru repository association encryption. If `create_kms` is set or `enable_codeguru` is not set, this value will be ignored"
-}
-
 variable "notifications_enabled" {
   type        = bool
   default     = false
@@ -50,7 +44,7 @@ variable "notifications_detail_type" {
 
   validation {
     condition     = var.notifications_detail_type == "FULL" || var.notifications_detail_type == "BASIC"
-    error_message = "Variable notifications_detail_types must have one of these values: FULL or BASIC"
+    error_message = "Variable notifications_detail_types must have one of these values: FULL or BASIC."
   }
 }
 
@@ -71,23 +65,8 @@ variable "notifications_event_ids" {
   EOF
 
   validation {
-    condition = length(var.notifications_event_ids) == length(distinct(var.notifications_event_ids)) && alltrue([for event in var.notifications_event_ids : contains(["codecommit-repository-comments-on-commits", "codecommit-repository-comments-on-pull-requests", "codecommit-repository-approvals-status-changed", "codecommit-repository-approvals-rule-override", "codecommit-repository-pull-request-created", "codecommit-repository-pull-request-source-updated", "codecommit-repository-pull-request-status-changed"], event)])
+    condition     = length(var.notifications_event_ids) == length(distinct(var.notifications_event_ids)) && alltrue([for event in var.notifications_event_ids : contains(["codecommit-repository-comments-on-commits", "codecommit-repository-comments-on-pull-requests", "codecommit-repository-approvals-status-changed", "codecommit-repository-approvals-rule-override", "codecommit-repository-pull-request-created", "codecommit-repository-pull-request-source-updated", "codecommit-repository-pull-request-status-changed"], event)])
+    error_message = "The 'notifications_events' variable must contain unique elements and all elements must be one of the allowed values: codecommit-repository-comments-on-commits, codecommit-repository-comments-on-pull-requests, codecommit-repository-approvals-status-changed, codecommit-repository-approvals-rule-override, codecommit-repository-pull-request-created, codecommit-repository-pull-request-source-updated, codecommit-repository-pull-request-status-change."
 
-    error_message = <<EOF
-      The "notifications_events" variable must contain unique elements and all elements must be one of the allowed values:
-      - codecommit-repository-comments-on-commits
-      - codecommit-repository-comments-on-pull-requests
-      - codecommit-repository-approvals-status-changed
-      - codecommit-repository-approvals-rule-override
-      - codecommit-repository-pull-request-created
-      - codecommit-repository-pull-request-source-updated
-      - codecommit-repository-pull-request-status-changed
-    EOF
   }
-}
-
-variable "notifications_topic_arn" {
-  type        = string
-  default     = ""
-  description = "ARN of existing SNS Topic which should be target for notification rule. If not set and variable notifications_enabled is set, new topic will be created"
 }

@@ -30,9 +30,3 @@ variable "enable_codeguru" {
   default     = false
   description = "Whether to enable CodeGuru reviewer"
 }
-
-variable "kms_id" {
-  type        = string
-  default     = ""
-  description = "ID for existing KMS for CodeGuru repository association encryption. If `create_kms` is set or `enable_codeguru` is not set, this value will be ignored"
-}
