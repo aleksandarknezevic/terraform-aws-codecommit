@@ -31,12 +31,6 @@ variable "enable_codeguru" {
   description = "Whether to enable CodeGuru reviewer"
 }
 
-variable "kms_id" {
-  type        = string
-  default     = ""
-  description = "ID for existing KMS for CodeGuru repository association encryption. If `create_kms` is set or `enable_codeguru` is not set, this value will be ignored"
-}
-
 variable "notifications_enabled" {
   type        = bool
   default     = false
@@ -75,10 +69,4 @@ variable "notifications_event_ids" {
     error_message = "The 'notifications_events' variable must contain unique elements and all elements must be one of the allowed values: codecommit-repository-comments-on-commits, codecommit-repository-comments-on-pull-requests, codecommit-repository-approvals-status-changed, codecommit-repository-approvals-rule-override, codecommit-repository-pull-request-created, codecommit-repository-pull-request-source-updated, codecommit-repository-pull-request-status-change."
 
   }
-}
-
-variable "notifications_topic_arn" {
-  type        = string
-  default     = ""
-  description = "ARN of existing SNS Topic which should be target for notification rule. If not set and variable notifications_enabled is set, new topic will be created"
 }
