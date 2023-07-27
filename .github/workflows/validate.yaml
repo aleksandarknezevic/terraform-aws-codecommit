@@ -49,7 +49,6 @@ jobs:
       - name: Terraform validate min version
         run: |
           cd ${{ matrix.directory }}
-          terraform version
           terraform fmt -check
           terraform init
           terraform validate
@@ -85,7 +84,6 @@ jobs:
       - name: Terraform validate max version
         run: |
           cd ${{ matrix.directory }}
-          terraform version
           terraform fmt -check
           terraform init
           terraform validate
