@@ -66,7 +66,7 @@ variable "notifications_detail_type" {
 
   validation {
     condition     = var.notifications_detail_type == "FULL" || var.notifications_detail_type == "BASIC"
-    error_message = "Variable notifications_detail_types must have one of these values: FULL or BASIC"
+    error_message = "Variable notifications_detail_types must have one of these values: FULL or BASIC."
   }
 }
 
@@ -77,13 +77,13 @@ variable "notifications_event_ids" {
   "codecommit-repository-pull-request-created", "codecommit-repository-pull-request-source-updated", "codecommit-repository-pull-request-status-changed"]
   description = <<EOF
     List of notifications events. Allowed values are:
-    - codecommit-repository-comments-on-commits
-    - codecommit-repository-comments-on-pull-requests
-    - codecommit-repository-approvals-status-changed
-    - codecommit-repository-approvals-rule-override
-    - codecommit-repository-pull-request-created
-    - codecommit-repository-pull-request-source-updated
-    - codecommit-repository-pull-request-status-change
+    codecommit-repository-comments-on-commits,
+    codecommit-repository-comments-on-pull-requests,
+    codecommit-repository-approvals-status-changed,
+    codecommit-repository-approvals-rule-override,
+    codecommit-repository-pull-request-created,
+    codecommit-repository-pull-request-source-updated,
+    codecommit-repository-pull-request-status-change.
   EOF
 
   validation {
