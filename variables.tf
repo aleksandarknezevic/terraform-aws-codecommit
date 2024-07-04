@@ -5,11 +5,6 @@ variable "enabled" {
   description = "Enable creation of module."
 }
 
-variable "region" {
-  type        = string
-  description = "AWS region"
-}
-
 variable "tags" {
   type        = map(string)
   default     = {}
@@ -71,7 +66,7 @@ variable "notifications_detail_type" {
 
   validation {
     condition     = var.notifications_detail_type == "FULL" || var.notifications_detail_type == "BASIC"
-    error_message = "Variable notifications_detail_types must have one of these values: FULL or BASIC"
+    error_message = "Variable notifications_detail_types must have one of these values: FULL or BASIC."
   }
 }
 
@@ -88,22 +83,12 @@ variable "notifications_event_ids" {
     - codecommit-repository-approvals-rule-override
     - codecommit-repository-pull-request-created
     - codecommit-repository-pull-request-source-updated
-    - codecommit-repository-pull-request-status-change
+    - codecommit-repository-pull-request-status-change.
   EOF
 
   validation {
-    condition = length(var.notifications_event_ids) == length(distinct(var.notifications_event_ids)) && alltrue([for event in var.notifications_event_ids : contains(["codecommit-repository-comments-on-commits", "codecommit-repository-comments-on-pull-requests", "codecommit-repository-approvals-status-changed", "codecommit-repository-approvals-rule-override", "codecommit-repository-pull-request-created", "codecommit-repository-pull-request-source-updated", "codecommit-repository-pull-request-status-changed"], event)])
-
-    error_message = <<EOF
-      The "notifications_events" variable must contain unique elements and all elements must be one of the allowed values:
-      - codecommit-repository-comments-on-commits
-      - codecommit-repository-comments-on-pull-requests
-      - codecommit-repository-approvals-status-changed
-      - codecommit-repository-approvals-rule-override
-      - codecommit-repository-pull-request-created
-      - codecommit-repository-pull-request-source-updated
-      - codecommit-repository-pull-request-status-changed
-    EOF
+    condition     = length(var.notifications_event_ids) == length(distinct(var.notifications_event_ids)) && alltrue([for event in var.notifications_event_ids : contains(["codecommit-repository-comments-on-commits", "codecommit-repository-comments-on-pull-requests", "codecommit-repository-approvals-status-changed", "codecommit-repository-approvals-rule-override", "codecommit-repository-pull-request-created", "codecommit-repository-pull-request-source-updated", "codecommit-repository-pull-request-status-changed"], event)])
+    error_message = "The 'notifications_events' variable must contain unique elements and all elements must be one of the allowed values: codecommit-repository-comments-on-commits, codecommit-repository-comments-on-pull-requests, codecommit-repository-approvals-status-changed, codecommit-repository-approvals-rule-override, codecommit-repository-pull-request-created, codecommit-repository-pull-request-source-updated, codecommit-repository-pull-request-status-change."
   }
 }
 

@@ -1,0 +1,69 @@
+name: Terraform pre-commit
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+
+env:
+  TERRAFORM_DOCS_VERSION: v0.16.0
+  TFLINT_VERSION: v0.47.0
+
+jobs:
+  directories:
+    runs-on: ubuntu-latest
+    outputs:
+      dirs: ${{ steps.set-dirs.outputs.dirs }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: set-dirs
+        run: echo "dirs=$(dirs=("./"); for d in $(ls -d examples/*); do dirs+=($d); done; echo "[\"${dirs[@]}\"]" | sed 's/ /", "/g')" >> $GITHUB_OUTPUT
+  terraform-versions:
+    name: Select Terraform versions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Extract Terraform min/max versions
+        id: minMax
+        uses: clowdhaus/terraform-min-max@v1.2.7
+        with:
+          directory: .
+    outputs:
+      minVersion: ${{ steps.minMax.outputs.minVersion }}
+      maxVersion: ${{ steps.minMax.outputs.maxVersion }}
+
+  terraform-validation-linting:
+    name: Terraform min/max version validation
+    needs: [directories, terraform-versions]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory: ${{fromJson(needs.directories.outputs.dirs)}}
+        tf_version:
+          - ${{ needs.terraform-versions.outputs.minVersion }}
+          - ${{ needs.terraform-versions.outputs.maxVersion }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Terraform v${{ matrix.version }}
+        uses: hashicorp/setup-terraform@v2.0.3
+        with:
+          terraform_version: ${{ matrix.tf_version }}
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v3
+        with:
+          tflint_version: ${{env.TFLINT_VERSION}}
+
+      - name: Terraform validate
+        run: |
+          cd ${{ matrix.directory }}
+          terraform fmt -check
+          terraform init
+          terraform validate
+          tflint
